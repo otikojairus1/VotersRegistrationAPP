@@ -16,9 +16,10 @@ import axios from 'axios'
 export default function SignInScreen ({ navigation }){
 
 
-  const [email, setEmail] = React.useState('');
+  const [question, setQuestion] = React.useState('');
 
-  const [password, setPassword] = React.useState('');
+  const [answera, setAnswera] = React.useState('');
+  const [answerb, setAnswerb] = React.useState('');
   let [alert, setAlert] = React.useState(false);
   let [AlertMessage, setAlertMessage] = React.useState("");
   const [isLoading, setIsLoading] = React.useState(false);
@@ -31,25 +32,43 @@ export default function SignInScreen ({ navigation }){
 
   const toast = useToast()
 
-  const onChangeEvent = (event) => {
-    setEmail(event)
-    console.log(email);
+  const onChangeQuestion = (event) => {
+    setQuestion(event)
+    //console.log(email);
   }
 
-  const onChangeEvent2 = (event) => {
-    setPassword(event)
-    console.log(password);
+  const onChangeAnswerA = (event) => {
+    setAnswera(event)
+    //console.log(password);
   }
+
+  const onChangeAnswerB = (event) => {
+    setAnswerb(event)
+    //console.log(password);
+  }
+
+  const onListClicked = (event) => {
+   // setAnswerb(event)
+    //console.log("password");
+    navigation.navigate('Question List');
+  }
+  
+  const onVoteClicked = (event) => {
+    // setAnswerb(event)
+     //console.log("password");
+     navigation.navigate('Voted Questions');
+   }
 
   const onSubmitHandler = (event) => {
     event.preventDefault();
     setIsLoading(true);
     axios({
       method: 'post',
-      url: 'https://voterappapi.herokuapp.com/api/login',
+      url: 'https://voterappapi.herokuapp.com/api/add/question',
       data: {
-        "email":email,
-        "password":password
+        "question":question,
+        "A":answera,
+        "B":answerb
       },
       config: { headers: {'Content-Type': 'application/json' }}
     })
@@ -58,15 +77,11 @@ export default function SignInScreen ({ navigation }){
           if(typeof response.data.error !== "undefined"){
             setIsLoading(false);
             setAlert(true);
-            setAlertMessage("We encountered an error while signing you in. Please try again later");
+            setAlertMessage("We encountered an error while adding the question. Please try again later");
           }else{
             setIsLoading(false);
-            if( response.data.userdetails.email == "admin@voterapp.com"){
-              navigation.navigate('Create Question');
-            }else{
-              navigation.navigate('Voting Questions',{"email": response.data.userdetails.email});
-            }
-
+            
+            navigation.navigate('Done');
 
 
           }
@@ -124,7 +139,7 @@ export default function SignInScreen ({ navigation }){
                   color: "warmGray.50",
                 }}
             >
-              Good to see you again {email}!
+              Add a new Question
             </Heading>
             <Heading
                 mt="1"
@@ -135,57 +150,47 @@ export default function SignInScreen ({ navigation }){
                 fontWeight="medium"
                 size="xs"
             >
-              Log in!
+              This question will be seen by all users upon submission
             </Heading>
 
             {AlertRender}
 
-            {isLoading ? <VStack space={2} alignItems="center">
+            {isLoading ? <HStack space={2} alignItems="center">
                   <Spinner size="lg" accessibilityLabel="Trying to sign you in!" />
                   <Heading color="primary.500" fontSize="2xl">
-                    Kindly wait as we make things right..
+                    Creating Question..
                   </Heading>
-                </VStack> :
+                </HStack> :
 
                 <VStack space={3} mt="5">
                   <FormControl>
-                    <FormControl.Label>User Email</FormControl.Label>
-                    <Input name="email" value={email} onChangeText={onChangeEvent} />
+                    <FormControl.Label>Question</FormControl.Label>
+                    <Input name="question" value={question} onChangeText={onChangeQuestion} />
                   </FormControl>
+
                   <FormControl>
-                    <FormControl.Label>Password</FormControl.Label>
-                    <Input  name="password" value={password} onChangeText={onChangeEvent2} type="password" />
-                    <Link
-                        _text={{
-                          fontSize: "xs",
-                          fontWeight: "500",
-                          color: "indigo.500",
-                        }}
-                        alignSelf="flex-end"
-                        mt="1"
-                    >
-                      Forget Password?
-                    </Link>
+                    <FormControl.Label>First Answer</FormControl.Label>
+                    <Input name="answer1" value={answera} onChangeText={onChangeAnswerA} />
                   </FormControl>
+
+                  <FormControl>
+                    <FormControl.Label>Second Answer</FormControl.Label>
+                    <Input name="answer2" value={answerb} onChangeText={onChangeAnswerB} />
+                  </FormControl>
+           
                   <Button type="submit"mt="2" colorScheme="indigo"
                           onPress={onSubmitHandler}>
-                    Sign in
+                    Add Question
                   </Button>
-                  <HStack mt="6" justifyContent="center">
-                    <Text
-                        fontSize="sm"
-                        color="coolGray.600"
-                        _dark={{
-                          color: "warmGray.200",
-                        }}
-                    >
-                      I'm a new user.{" "}
-                    </Text>
-                    <Button variant="ghost" colorScheme="success"
-                            onPress={() => navigation.navigate('Register')}>
-                      Create an account
-                    </Button>
-                  </HStack>
+
+                  <Button mt="2" colorScheme="green"
+                          onPress={onListClicked}>
+                    View all questions
+                  </Button>
+                  <Button mt="2" colorScheme="warning"
+                          onPress={onVoteClicked}>
+                    View Voted questions
+                  </Button>
                 </VStack>}
           </Box>
         </Center>
