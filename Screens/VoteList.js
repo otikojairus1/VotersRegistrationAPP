@@ -53,8 +53,10 @@ function Basic({nav, email}) {
         .then(response => response.json())
         .then(
           function (response){
+            data = [];
            // console.log(response.Data[0]);
             response.response.forEach(element => {
+             
               
               data.push(element);
               setIsLoading(false);

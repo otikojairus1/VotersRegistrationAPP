@@ -56,6 +56,7 @@ function Basic({nav}) {
             response.response.forEach(element => {
               
               data.push(element);
+       
               setIsLoading(false);
             });
           }
@@ -101,7 +102,8 @@ console.log(data);
       "voter":item.voter,
       "answer":item.answer,
       "created_at":item.created_at,
-      "updated_at":item.updated_at
+      "updated_at":item.updated_at,
+      "count":data.length
 
     });
     

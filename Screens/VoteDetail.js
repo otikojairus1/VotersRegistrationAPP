@@ -15,7 +15,7 @@ import {
 } from "native-base"
 import { MaterialIcons } from '@expo/vector-icons';
 export default function VoteDetail({ route }) {
-    const { id, question, voter,updated_at,answer, created_at } = route.params;
+    const { id, question, count, voter,updated_at,answer, created_at } = route.params;
     return (
         <Center flex={1} mx={4}>
             <Alert w="100%" status="success">
@@ -94,6 +94,17 @@ export default function VoteDetail({ route }) {
                         Vote time:
                     </Text>
                     {created_at}
+
+                    <Text
+                        fontSize="lg"
+                        fontWeight="bold"
+                        _dark={{
+                            color: "coolGray.800",
+                        }}
+                    >
+                        Total Voted Question (STATISTICS):
+                    </Text>
+                    {count}
 
                         
 

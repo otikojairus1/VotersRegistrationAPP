@@ -67,6 +67,7 @@ const onSubmitHandler = (event) => {
     password:password
 })
   .then(function (response) {
+    console.log(response);
     
     setIsLoading(false);
     
