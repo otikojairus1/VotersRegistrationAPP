@@ -1,3 +1,4 @@
+
 import * as React from "react"
 import {
   Box,
@@ -12,6 +13,15 @@ import {
   Center,  CloseIcon,
   NativeBaseProvider,
 } from "native-base"
+
+import { 
+  hasHardwareAsync,
+  isEnrolledAsync,
+  LocalAuthenticationOptions,
+  authenticateAsync 
+} from 'expo-local-authentication';
+
+import { TouchableOpacity, Image } from "react-native";
 import axios from 'axios'
 export default function SignInScreen ({ navigation }){
 
@@ -30,6 +40,29 @@ export default function SignInScreen ({ navigation }){
   // });
 
   const toast = useToast()
+
+
+ const biometricsAuth = async () => {
+     
+  const compatible = await hasHardwareAsync()
+  if (!compatible) throw 'This device is not compatible for biometric authentication'
+  const enrolled = await isEnrolledAsync()
+  if (!enrolled) throw 'This device doesnt have biometric authentication enabled'
+  const result = await authenticateAsync()
+  console.log(result);
+  if (!result.success) throw `${result.error} - Authentication unsuccessful`
+
+  if(result){
+    // AsyncStorage.getItem('biometricsID').then((value)=>{
+    //   console.log(value);
+      
+    //  navigation.navigate('HomeWallet');
+    // })
+    navigation.navigate('Voting Questions', {email:"nixonmwami@gmail.com"});
+ 
+  }
+  return result
+}
 
   const onChangeEvent = (event) => {
     setEmail(event)
@@ -171,6 +204,9 @@ export default function SignInScreen ({ navigation }){
                           onPress={onSubmitHandler}>
                     Sign in
                   </Button>
+                  <TouchableOpacity onPress={biometricsAuth} style={{position:"absolute", left:80, top:300}}>
+<Image source={require('../assets/finger.gif')} style={{ height:120, width:120, borderRadius:20}}/>
+</TouchableOpacity>
                   <HStack mt="6" justifyContent="center">
                     <Text
                         fontSize="sm"

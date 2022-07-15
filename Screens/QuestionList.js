@@ -117,7 +117,7 @@ console.log(data);
 
             
           <HStack alignItems="center" space={3}>
-            <Avatar size="48px" source={{ uri: "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" }} />
+            <Avatar size="48px" source={ require('../assets/userdp.jpeg') } />
             <VStack>
               <Text color="coolGray.800"  _dark={{ color: 'warmGray.50' }}  bold>
                 {item.question}
